@@ -51,4 +51,24 @@ auto Server::StartListen() -> void {
                ntohs(socket_address_.sin_port));
 }
 
+auto Server::AcceptConnection() -> void {
+  new_socket_ = accept(socket_, reinterpret_cast<sockaddr *>(&socket_address_),
+                       &socket_address_len_);
+
+  if (new_socket_ < 0) {
+    std::println("Failed to accept connection");
+    exit(1);
+  }
+}
+
+auto Server::ReadFromSocket() -> void {
+  char buffer[Server::BUFFER_SIZE] = {0};
+  auto bytes_received = read(new_socket_, buffer, Server::BUFFER_SIZE);
+
+  if (bytes_received < 0) {
+    std::println("Failed to read bytes from socket");
+    exit(1);
+  }
+}
+
 } // namespace http

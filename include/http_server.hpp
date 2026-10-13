@@ -33,5 +33,9 @@ private:
   auto StartServer() -> int;
   auto CloseServer() -> void;
   auto StartListen() -> void;
+  auto AcceptConnection() -> void;
+  auto ReadFromSocket() -> void;
+
+  static constexpr std::size_t BUFFER_SIZE = 30720;
 };
 }; // namespace http
