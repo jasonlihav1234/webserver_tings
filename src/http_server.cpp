@@ -37,4 +37,18 @@ auto Server::CloseServer() -> void {
   }
 }
 
+auto Server::StartListen() -> void {
+  auto listen_result = listen(socket_, 6);
+  if (listen_result < 0) {
+    std::println("failed to listen");
+    exit(1);
+  }
+
+  char ip_buffer[INET_ADDRSTRLEN];
+  inet_ntop(AF_INET, &socket_address_.sin_addr, ip_buffer, sizeof(ip_buffer));
+
+  std::println("\nListening on ADDRESS: {} PORT: {}\n", ip_buffer,
+               ntohs(socket_address_.sin_port));
+}
+
 } // namespace http

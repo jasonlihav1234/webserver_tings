@@ -32,5 +32,6 @@ private:
 
   auto StartServer() -> int;
   auto CloseServer() -> void;
+  auto StartListen() -> void;
 };
 }; // namespace http
