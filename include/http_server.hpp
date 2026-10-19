@@ -8,7 +8,7 @@ namespace http {
 class Server {
 public:
   Server(std::string ip_address, int port)
-      : ip_address_{ip_address}, port_{port}, socket_{}, new_socket_{},
+      : ip_address_{ip_address}, port_{port}, socket_{}, new_socket_{-1},
         incoming_message_{}, socket_address_{},
         socket_address_len_{sizeof(socket_address_)}, server_message_{} {
 
@@ -20,6 +20,13 @@ public:
   }
   ~Server() { CloseServer(); }
 
+  auto StartServer() -> int;
+  auto CloseServer() -> void;
+  auto StartListen() -> void;
+  auto AcceptConnection() -> void;
+  auto ReadFromSocket() -> std::string;
+  auto Write(const std::string buffer, std::size_t count) -> ssize_t;
+
 private:
   std::string ip_address_;
   int port_;
@@ -29,12 +36,6 @@ private:
   struct sockaddr_in socket_address_;
   uint32_t socket_address_len_;
   std::string server_message_;
-
-  auto StartServer() -> int;
-  auto CloseServer() -> void;
-  auto StartListen() -> void;
-  auto AcceptConnection() -> void;
-  auto ReadFromSocket() -> void;
 
   static constexpr std::size_t BUFFER_SIZE = 30720;
 };
