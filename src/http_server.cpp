@@ -6,7 +6,7 @@
 
 namespace http {
 auto Server::StartServer() -> int {
-  socket_ = socket(AF_INET, SOCK_DGRAM, 0);
+  socket_ = socket(AF_INET, SOCK_STREAM, 0);
   if (socket_ < 0) {
     std::println("Failed to create socket");
     exit(1);
@@ -61,7 +61,7 @@ auto Server::AcceptConnection() -> void {
   }
 }
 
-auto Server::ReadFromSocket() -> void {
+auto Server::ReadFromSocket() -> std::string {
   char buffer[Server::BUFFER_SIZE] = {0};
   auto bytes_received = read(new_socket_, buffer, Server::BUFFER_SIZE);
 
@@ -69,6 +69,23 @@ auto Server::ReadFromSocket() -> void {
     std::println("Failed to read bytes from socket");
     exit(1);
   }
+
+  return buffer;
+}
+
+auto Server::Write(const std::string message, const std::size_t count)
+    -> ssize_t {
+  ssize_t bytesSent;
+  (void)count;
+
+  bytesSent = write(new_socket_, message.c_str(), message.size());
+  if (bytesSent == static_cast<ssize_t>(message.size())) {
+    std::println("Server response sent to client");
+  } else {
+    std::println("Error sending response to client");
+  }
+
+  return bytesSent;
 }
 
 } // namespace http
